@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CompleteIQ | SEO • AEO • CRO Competitor Analysis Tool | RizenMetrics</title>
+  <meta name="description" content="Free competitor analysis tool for SEO, AEO (Answer Engine Optimization), and CRO. Compare your digital marketing performance against competitors.">
+  <meta name="keywords" content="SEO tool, AEO tool, CRO analysis, competitor analysis, digital marketing, RizenMetrics">
+  <meta name="author" content="RizenMetrics">
+  <link rel="canonical" href="https://rizenmetrics.com/complete-iq-digital-marketing-competitor-analysis-tool">
+  <meta property="og:title" content="CompleteIQ - SEO/AEO/CRO Competitor Analysis Tool">
+  <meta property="og:description" content="Free competitor analysis tool for SEO, AEO, and CRO. Compare your digital marketing performance.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rizenmetrics.com/complete-iq-digital-marketing-competitor-analysis-tool">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    :root {
+      --bg-primary: #0a0b0f;
+      --bg-secondary: #12141a;
+      --bg-tertiary: #1a1d24;
+      --bg-elevated: #22262f;
+      --bg-hover: #2a2f3a;
+      --text-primary: #f0f2f5;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --accent-primary: #22d3ee;
+      --accent-secondary: #a78bfa;
+      --accent-success: #34d399;
+      --accent-warning: #fbbf24;
+      --accent-danger: #f87171;
+      --border-subtle: rgba(255,255,255,0.06);
+      --border-default: rgba(255,255,255,0.1);
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+    
+    html { font-size: 16px; -webkit-font-smoothing: antialiased; }
+    
+    body {
+      font-family: 'Outfit', system-ui, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+    
+    #app {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background: radial-gradient(ellipse at 0% 0%, rgba(34,211,238,0.05) 0%, transparent 50%),
+                  radial-gradient(ellipse at 100% 100%, rgba(167,139,250,0.05) 0%, transparent 50%),
+                  var(--bg-primary);
+    }
+    
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-elevated); border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--bg-hover); }
+    
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 24px;
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border-subtle);
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+    
+    .logo { display: flex; flex-direction: column; gap: 2px; }
+    .logo-main { display: flex; align-items: center; gap: 8px; }
+    .logo-icon { font-size: 1.5rem; color: var(--accent-primary); animation: pulse 3s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .tagline {
+      font-size: 0.7rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+    
+    .project-input {
+      flex: 1;
+      min-width: 200px;
+      max-width: 300px;
+      padding: 8px 16px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .project-input:focus { outline: none; border-color: var(--accent-primary); }
+    .project-input::placeholder { color: var(--text-muted); }
+    
+    .view-toggle {
+      display: flex;
+      gap: 4px;
+      background: var(--bg-tertiary);
+      padding: 4px;
+      border-radius: var(--radius-md);
+    }
+    .view-btn {
+      padding: 8px 16px;
+      background: transparent;
+      border: none;
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .view-btn:hover { color: var(--text-primary); background: var(--bg-hover); }
+    .view-btn.active { background: var(--accent-primary); color: var(--bg-primary); }
+    
+    .tools { display: flex; gap: 8px; }
+    .tool-btn {
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-default);
+      border-radius: var(--radius-sm);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .tool-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .tool-btn.danger:hover { border-color: var(--accent-danger); color: var(--accent-danger); }
+    
+    .main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 24px;
+      padding: 24px;
+    }
+    
+    @media (max-width: 900px) {
+      .main { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; overflow-x: auto; padding-bottom: 8px; }
+      .tabs { flex-direction: row; flex-wrap: nowrap; }
+      .header { gap: 12px; }
+      .project-input { max-width: none; order: 10; width: 100%; }
+    }
+    
+    .sidebar { display: flex; flex-direction: column; gap: 8px; }
+    .tabs { display: flex; flex-direction: column; gap: 4px; }
+    
+    .tab {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      white-space: nowrap;
+    }
+    .tab:hover { background: var(--bg-tertiary); border-color: var(--border-default); }
+    .tab.active { background: var(--bg-tertiary); border-color: var(--accent-secondary); color: var(--text-primary); }
+    .tab.you { border-left: 3px solid var(--accent-primary); }
+    .tab-name { overflow: hidden; text-overflow: ellipsis; }
+    .tab-remove {
+      width: 20px; height: 20px;
+      background: transparent; border: none;
+      color: var(--text-muted); font-size: 1rem;
+      cursor: pointer; opacity: 0; transition: opacity 0.2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tab:hover .tab-remove { opacity: 1; }
+    .tab-remove:hover { color: var(--accent-danger); }
+    
+    .add-btn {
+      padding: 14px;
+      background: transparent;
+      border: 2px dashed var(--border-default);
+      border-radius: var(--radius-md);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .add-btn:hover { border-color: var(--accent-primary); color: var(--accent-primary); }
+    
+    .content { display: flex; flex-direction: column; gap: 24px; overflow-x: hidden; }
+    
+    .form-header input {
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+    .form-header input:focus { outline: none; }
+    .name-input {
+      font-size: 1.5rem;
+      font-weight: 600;
+      border-bottom: 2px solid var(--border-default) !important;
+      padding: 8px 0;
+      margin-bottom: 8px;
+    }
+    .name-input:focus { border-color: var(--accent-primary) !important; }
+    .url-input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      color: var(--text-secondary) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding: 4px 0;
+    }
+    
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    
+    .category {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .category-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .category-icon { font-size: 1.25rem; }
+    .category-title { flex: 1; font-size: 1rem; font-weight: 600; }
+    .category-score {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--bg-tertiary);
+    }
+    
+    .metrics { display: flex; flex-direction: column; gap: 12px; }
+    .metric { display: flex; flex-direction: column; gap: 4px; }
+    .metric-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+    .metric-tip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 14px; height: 14px;
+      font-size: 0.6rem;
+      background: var(--bg-tertiary);
+      border-radius: 50%;
+      color: var(--text-muted);
+      cursor: help;
+    }
+    .metric-field { position: relative; }
+    .metric-field input {
+      width: 100%;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .metric-field input:focus { outline: none; border-color: var(--accent-primary); }
+    .metric-field input::placeholder { color: var(--text-muted); }
+    .metric-bar {
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+      transition: width 0.3s;
+    }
+    
+    .serp {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+    }
+    .serp-title { font-size: 1rem; font-weight: 600; margin-bottom: 16px; }
+    .serp-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 8px;
+    }
+    .serp-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--bg-tertiary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .serp-item:hover { border-color: var(--border-default); }
+    .serp-item.active { border-color: var(--accent-success); background: rgba(52,211,153,0.1); }
+    .serp-item input { display: none; }
+    .serp-label { font-size: 0.8rem; color: var(--text-secondary); }
+    .serp-item.active .serp-label { color: var(--text-primary); }
+    
+    .notes { display: flex; flex-direction: column; gap: 8px; }
+    .notes label { font-size: 0.9rem; color: var(--text-secondary); }
+    .notes textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.9rem;
+      resize: vertical;
+      min-height: 100px;
+    }
+    .notes textarea:focus { outline: none; border-color: var(--accent-secondary); }
+    .notes textarea::placeholder { color: var(--text-muted); }
+    
+    /* Report View */
+    .report { display: flex; flex-direction: column; gap: 32px; padding: 24px; }
+    
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .report-title { font-size: 1.5rem; font-weight: 700; }
+    .report-date { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; color: var(--text-muted); }
+    .score-display { text-align: center; }
+    .score-value { font-family: 'JetBrains Mono', monospace; font-size: 3rem; font-weight: 700; }
+    .score-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; }
+    
+    .chart {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .chart-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+    .chart-bars { display: flex; flex-direction: column; gap: 12px; }
+    .bar-row {
+      display: grid;
+      grid-template-columns: 40px 160px 1fr 60px;
+      gap: 12px;
+      align-items: center;
+    }
+    @media (max-width: 600px) { .bar-row { grid-template-columns: 30px 100px 1fr 50px; } }
+    .bar-rank { font-family: 'JetBrains Mono', monospace; font-size: 0.9rem; color: var(--text-muted); }
+    .bar-row.you .bar-rank { color: var(--accent-primary); }
+    .bar-name { font-size: 0.9rem; color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-row.you .bar-name { color: var(--text-primary); font-weight: 500; }
+    .bar-track { height: 24px; background: var(--bg-tertiary); border-radius: var(--radius-sm); overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: var(--radius-sm); transition: width 0.6s ease; }
+    .bar-score { font-family: 'JetBrains Mono', monospace; font-size: 1rem; font-weight: 600; text-align: right; }
+    
+    .insights {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 20px;
+    }
+    @media (max-width: 800px) { .insights { grid-template-columns: 1fr; } }
+    
+    .insight-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+    .insight-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+    
+    .gap-list { display: flex; flex-direction: column; gap: 10px; }
+    .gap-item { background: var(--bg-tertiary); border-radius: var(--radius-md); padding: 12px; }
+    .gap-header { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .gap-rank { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--accent-warning); font-weight: 600; }
+    .gap-metric { font-size: 0.9rem; font-weight: 500; }
+    .gap-category { margin-left: auto; font-size: 0.75rem; color: var(--text-muted); }
+    .gap-detail { display: flex; align-items: center; gap: 12px; font-size: 0.8rem; color: var(--text-secondary); }
+    .gap-competitor { flex: 1; }
+    .gap-scores { font-family: 'JetBrains Mono', monospace; }
+    .gap-their { color: var(--accent-success); }
+    .gap-yours { color: var(--accent-danger); }
+    .gap-diff { font-family: 'JetBrains Mono', monospace; color: var(--accent-danger); font-weight: 600; }
+    
+    .opp-list { display: flex; flex-direction: column; gap: 10px; }
+    .opportunity {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      padding: 12px;
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--border-default);
+    }
+    .opportunity.high { border-left-color: var(--accent-danger); }
+    .opportunity.medium { border-left-color: var(--accent-warning); }
+    .opp-icon { font-size: 1.25rem; }
+    .opp-content { flex: 1; }
+    .opp-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 4px; }
+    .opp-desc { font-size: 0.8rem; color: var(--text-secondary); }
+    .opp-priority {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+    }
+    .opp-priority.high { background: rgba(248,113,113,0.2); color: var(--accent-danger); }
+    .opp-priority.medium { background: rgba(251,191,36,0.2); color: var(--accent-warning); }
+    
+    .empty { text-align: center; padding: 40px; color: var(--text-muted); }
+    
+    .footer {
+      padding: 12px 24px;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .footer a { color: var(--accent-primary); text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div id="app"></div>
+  
+  <script>
+  (function() {
+    'use strict';
+    
+    const METRICS = {
+      seo: {
+        label: 'SEO Health', weight: 0.30, icon: '🔍',
+        metrics: {
+          domainAuthority: { label: 'Domain Authority', desc: 'Moz DA or Ahrefs DR (0-100)' },
+          organicTraffic: { label: 'Organic Traffic', desc: 'Relative traffic score (0-100)' },
+          keywordRankings: { label: 'Keyword Rankings', desc: 'Target keyword visibility (0-100)' },
+          backlinks: { label: 'Backlink Quality', desc: 'Quality & quantity score (0-100)' },
+          technicalHealth: { label: 'Technical Health', desc: 'Crawlability, errors (0-100)' },
+          coreWebVitals: { label: 'Core Web Vitals', desc: 'LCP, FID, CLS combined (0-100)' },
+          indexedPages: { label: 'Indexed Pages', desc: 'Coverage vs competitors (0-100)' },
+          siteSpeed: { label: 'Site Speed', desc: 'PageSpeed score (0-100)' }
+        }
+      },
+      aeo: {
+        label: 'AEO Performance', weight: 0.35, icon: '🤖',
+        metrics: {
+          aiOverviewPresence: { label: 'AI Overview Presence', desc: 'Appearance in AI Overviews (0-100)' },
+          featuredSnippets: { label: 'Featured Snippets', desc: 'Snippet ownership rate (0-100)' },
+          citationWorthiness: { label: 'Citation Worthiness', desc: 'LLM citation potential (0-100)' },
+          entityCoverage: { label: 'Entity Coverage', desc: 'Named entity recognition (0-100)' },
+          structuredData: { label: 'Structured Data', desc: 'Schema markup completeness (0-100)' },
+          contentFreshness: { label: 'Content Freshness', desc: 'Update recency & frequency (0-100)' },
+          expertiseSignals: { label: 'E-E-A-T Signals', desc: 'Experience, expertise, authority (0-100)' },
+          directAnswerFormat: { label: 'Direct Answer Format', desc: 'Answer-ready content (0-100)' }
+        }
+      },
+      cro: {
+        label: 'CRO Quality', weight: 0.25, icon: '🎯',
+        metrics: {
+          conversionRate: { label: 'Conversion Rate', desc: 'Estimated CVR percentile (0-100)' },
+          bounceRate: { label: 'Bounce Rate (Inv)', desc: 'Lower is better, inverted (0-100)' },
+          avgSessionDuration: { label: 'Session Duration', desc: 'Engagement length score (0-100)' },
+          pagesPerSession: { label: 'Pages/Session', desc: 'Navigation depth score (0-100)' },
+          ctaClarity: { label: 'CTA Clarity', desc: 'Call-to-action effectiveness (0-100)' },
+          trustSignals: { label: 'Trust Signals', desc: 'Reviews, certs, guarantees (0-100)' },
+          mobileUx: { label: 'Mobile UX', desc: 'Mobile experience quality (0-100)' },
+          loadTime: { label: 'Load Time Score', desc: 'Time to interactive (0-100)' }
+        }
+      },
+      content: {
+        label: 'Content Authority', weight: 0.10, icon: '📝',
+        metrics: {
+          contentDepth: { label: 'Content Depth', desc: 'Comprehensiveness & detail (0-100)' },
+          updateFrequency: { label: 'Update Frequency', desc: 'Publishing cadence (0-100)' },
+          multimediaUsage: { label: 'Multimedia Usage', desc: 'Images, video, interactive (0-100)' },
+          topicalAuthority: { label: 'Topical Authority', desc: 'Niche expertise signals (0-100)' },
+          userEngagement: { label: 'User Engagement', desc: 'Comments, shares, dwell (0-100)' }
+        }
+      }
+    };
+
+    const SERP = {
+      localPack: { label: 'Local Pack', icon: '📍' },
+      knowledgePanel: { label: 'Knowledge Panel', icon: '🧠' },
+      imageCarousel: { label: 'Image Carousel', icon: '🖼️' },
+      videoResults: { label: 'Video Results', icon: '🎬' },
+      peopleAlsoAsk: { label: 'People Also Ask', icon: '❓' },
+      sitelinks: { label: 'Sitelinks', icon: '🔗' },
+      reviews: { label: 'Review Stars', icon: '⭐' },
+      faq: { label: 'FAQ Schema', icon: '📋' }
+    };
+
+    let state = { competitors: [], activeId: null, view: 'input', projectName: '' };
+
+    const genId = () => Math.random().toString(36).substr(2, 9);
+    
+    const createCompetitor = (isYou = false) => {
+      const c = { id: genId(), isYou, name: isYou ? 'Your Brand' : '', url: '', notes: '', serpFeatures: {} };
+      Object.keys(METRICS).forEach(cat => { c[cat] = {}; Object.keys(METRICS[cat].metrics).forEach(m => c[cat][m] = ''); });
+      Object.keys(SERP).forEach(f => c.serpFeatures[f] = false);
+      return c;
+    };
+
+    const getScore = v => Math.min(Math.max(parseFloat(v) || 0, 0), 100);
+    const getColor = s => s >= 80 ? 'var(--accent-primary)' : s >= 60 ? 'var(--accent-success)' : s >= 40 ? 'var(--accent-warning)' : 'var(--accent-danger)';
+    const getCatScore = (c, cat) => { const k = Object.keys(METRICS[cat].metrics); return k.reduce((a, m) => a + getScore(c[cat][m]), 0) / k.length; };
+    const getOverall = c => {
+      let t = 0;
+      Object.entries(METRICS).forEach(([cat, d]) => t += getCatScore(c, cat) * d.weight);
+      t += (Object.values(c.serpFeatures).filter(Boolean).length / Object.keys(SERP).length) * 10;
+      return Math.min(t, 100);
+    };
+
+    const save = () => localStorage.setItem('completeIQ', JSON.stringify({ competitors: state.competitors, projectName: state.projectName }));
+    
+    const load = () => {
+      try {
+        const d = JSON.parse(localStorage.getItem('completeIQ'));
+        if (d?.competitors?.length) { state.competitors = d.competitors; state.projectName = d.projectName || ''; state.activeId = d.competitors[0].id; }
+        else initDefault();
+      } catch { initDefault(); }
+    };
+    
+    const initDefault = () => { const y = createCompetitor(true); state.competitors = [y]; state.activeId = y.id; };
+
+    const render = () => {
+      document.getElementById('app').innerHTML = `
+        ${renderHeader()}
+        ${state.view === 'input' ? renderInput() : renderReport()}
+        ${renderFooter()}
+      `;
+      attachEvents();
+    };
+
+    const renderHeader = () => `
+      <header class="header">
+        <div class="logo">
+          <div class="logo-main"><span class="logo-icon">◆</span><span class="logo-text">CompleteIQ</span></div>
+          <span class="tagline">SEO • AEO • CRO Analysis</span>
+        </div>
+        <input type="text" class="project-input" placeholder="Project Name" value="${state.projectName}" data-action="project">
+        <div class="view-toggle">
+          <button class="view-btn ${state.view === 'input' ? 'active' : ''}" data-view="input">📝 Input</button>
+          <button class="view-btn ${state.view === 'report' ? 'active' : ''}" data-view="report">📊 Report</button>
+        </div>
+        <div class="tools">
+          <button class="tool-btn" data-action="export">↓ Export</button>
+          <label class="tool-btn">↑ Import<input type="file" accept=".json" data-action="import" hidden></label>
+          <button class="tool-btn danger" data-action="clear">✕ Clear</button>
+        </div>
+      </header>
+    `;
+
+    const renderInput = () => {
+      const a = state.competitors.find(c => c.id === state.activeId);
+      return `
+        <main class="main">
+          <aside class="sidebar">
+            <div class="tabs">
+              ${state.competitors.map(c => `
+                <button class="tab ${c.id === state.activeId ? 'active' : ''} ${c.isYou ? 'you' : ''}" data-id="${c.id}">
+                  <span class="tab-name">${c.isYou ? '★ ' : ''}${c.name || (c.isYou ? 'Your Brand' : 'Unnamed')}</span>
+                  ${!c.isYou ? `<button class="tab-remove" data-remove="${c.id}">×</button>` : ''}
+                </button>
+              `).join('')}
+            </div>
+            <button class="add-btn" data-action="add">+ Add Competitor</button>
+          </aside>
+          <section class="content">${a ? renderForm(a) : '<div class="empty">Select a competitor</div>'}</section>
+        </main>
+      `;
+    };
+
+    const renderForm = c => `
+      <div class="form-header">
+        <input type="text" class="name-input" value="${c.name}" placeholder="${c.isYou ? 'Your Brand Name' : 'Competitor Name'}" data-field="name" data-id="${c.id}">
+        <input type="text" class="url-input" value="${c.url}" placeholder="https://example.com" data-field="url" data-id="${c.id}">
+      </div>
+      <div class="categories">
+        ${Object.entries(METRICS).map(([cat, d]) => `
+          <div class="category">
+            <div class="category-header">
+              <span class="category-icon">${d.icon}</span>
+              <span class="category-title">${d.label}</span>
+              <span class="category-score" style="color:${getColor(getCatScore(c, cat))}">${Math.round(getCatScore(c, cat))}</span>
+            </div>
+            <div class="metrics">
+              ${Object.entries(d.metrics).map(([k, m]) => `
+                <div class="metric">
+                  <label class="metric-label">${m.label} <span class="metric-tip" title="${m.desc}">?</span></label>
+                  <div class="metric-field">
+                    <input type="number" min="0" max="100" value="${c[cat][k]}" placeholder="0-100" data-cat="${cat}" data-key="${k}" data-id="${c.id}">
+                    <div class="metric-bar" style="width:${getScore(c[cat][k])}%;background:${getColor(getScore(c[cat][k]))}"></div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="serp">
+        <div class="serp-title">🏆 SERP Features Owned</div>
+        <div class="serp-grid">
+          ${Object.entries(SERP).map(([k, f]) => `
+            <label class="serp-item ${c.serpFeatures[k] ? 'active' : ''}">
+              <input type="checkbox" ${c.serpFeatures[k] ? 'checked' : ''} data-serp="${k}" data-id="${c.id}">
+              <span>${f.icon}</span>
+              <span class="serp-label">${f.label}</span>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+      <div class="notes">
+        <label>Strategic Notes</label>
+        <textarea placeholder="Key insights, opportunities, threats..." data-field="notes" data-id="${c.id}">${c.notes}</textarea>
+      </div>
+    `;
+
+    const renderReport = () => {
+      const you = state.competitors.find(c => c.isYou);
+      const sorted = [...state.competitors].map(c => ({...c, score: getOverall(c)})).sort((a, b) => b.score - a.score);
+      const max = Math.max(...sorted.map(c => c.score), 1);
+      
+      return `
+        <div class="report">
+          <div class="report-header">
+            <div>
+              <div class="report-title">${state.projectName || 'Competitor Analysis Report'}</div>
+              <div class="report-date">Generated ${new Date().toLocaleDateString()}</div>
+            </div>
+            ${you ? `<div class="score-display"><div class="score-value" style="color:${getColor(getOverall(you))}">${Math.round(getOverall(you))}</div><div class="score-label">Your Overall Score</div></div>` : ''}
+          </div>
+          <div class="chart">
+            <div class="chart-title">Overall Competitive Position</div>
+            <div class="chart-bars">
+              ${sorted.map((c, i) => `
+                <div class="bar-row ${c.isYou ? 'you' : ''}">
+                  <div class="bar-rank">#${i + 1}</div>
+                  <div class="bar-name">${c.isYou ? '★ ' : ''}${c.name || 'Unnamed'}</div>
+                  <div class="bar-track"><div class="bar-fill" style="width:${(c.score / max) * 100}%;background:${c.isYou ? 'var(--accent-primary)' : 'var(--accent-secondary)'}"></div></div>
+                  <div class="bar-score">${Math.round(c.score)}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="insights">${renderGaps(you)}${renderOpps(you)}</div>
+        </div>
+      `;
+    };
+
+    const renderGaps = you => {
+      if (!you) return '<div class="insight-card"><div class="empty">Add your brand data to see gaps</div></div>';
+      const gaps = [];
+      Object.entries(METRICS).forEach(([cat, d]) => {
+        Object.entries(d.metrics).forEach(([k, m]) => {
+          const yours = getScore(you[cat][k]);
+          state.competitors.forEach(c => {
+            if (c.isYou) return;
+            const theirs = getScore(c[cat][k]);
+            const gap = theirs - yours;
+            if (gap > 10) gaps.push({ cat: d.label, metric: m.label, comp: c.name || 'Unnamed', yours, theirs, gap, priority: gap * d.weight });
+          });
+        });
+      });
+      const top = gaps.sort((a, b) => b.priority - a.priority).slice(0, 8);
+      return `
+        <div class="insight-card">
+          <div class="insight-title">⚠️ Priority Gaps to Address</div>
+          ${top.length ? `<div class="gap-list">${top.map((g, i) => `
+            <div class="gap-item">
+              <div class="gap-header"><span class="gap-rank">#${i + 1}</span><span class="gap-metric">${g.metric}</span><span class="gap-category">${g.cat}</span></div>
+              <div class="gap-detail"><span class="gap-competitor">${g.comp}</span><span class="gap-scores"><span class="gap-their">${Math.round(g.theirs)}</span> vs <span class="gap-yours">${Math.round(g.yours)}</span></span><span class="gap-diff">-${Math.round(g.gap)} pts</span></div>
+            </div>
+          `).join('')}</div>` : '<div class="empty">🎉 No significant gaps found!</div>'}
+        </div>
+      `;
+    };
+
+    const renderOpps = you => {
+      if (!you) return '';
+      const opps = [];
+      Object.entries(SERP).forEach(([k, f]) => {
+        const has = state.competitors.filter(c => !c.isYou && c.serpFeatures[k]);
+        if (!you.serpFeatures[k] && has.length) opps.push({ title: `Capture ${f.label}`, icon: f.icon, desc: `${has.length} competitor(s) own this`, priority: 'high' });
+      });
+      ['aiOverviewPresence', 'featuredSnippets', 'citationWorthiness'].forEach(k => {
+        const s = getScore(you.aeo[k]);
+        if (s < 50) opps.push({ title: `Improve ${METRICS.aeo.metrics[k].label}`, icon: '🤖', desc: `Current: ${Math.round(s)}. AI visibility opportunity.`, priority: s < 30 ? 'high' : 'medium' });
+      });
+      return `
+        <div class="insight-card">
+          <div class="insight-title">💡 Strategic Opportunities</div>
+          ${opps.length ? `<div class="opp-list">${opps.slice(0, 6).map(o => `
+            <div class="opportunity ${o.priority}">
+              <span class="opp-icon">${o.icon}</span>
+              <div class="opp-content"><div class="opp-title">${o.title}</div><div class="opp-desc">${o.desc}</div></div>
+              <span class="opp-priority ${o.priority}">${o.priority}</span>
+            </div>
+          `).join('')}</div>` : '<div class="empty">Add competitor data to reveal opportunities</div>'}
+        </div>
+      `;
+    };
+
+    const renderFooter = () => `
+      <footer class="footer">
+        <span>CompleteIQ — SEO/AEO/CRO Analysis by <a href="https://rizenmetrics.com" target="_blank" rel="noopener">RizenMetrics</a></span>
+        <span>v1.0.0</span>
+      </footer>
+    `;
+
+    const attachEvents = () => {
+      const app = document.getElementById('app');
+      app.querySelectorAll('[data-view]').forEach(b => b.onclick = () => { state.view = b.dataset.view; render(); });
+      app.querySelectorAll('.tab[data-id]').forEach(t => t.onclick = e => { if (!e.target.classList.contains('tab-remove')) { state.activeId = t.dataset.id; render(); } });
+      app.querySelectorAll('[data-remove]').forEach(b => { b.onclick = e => { e.stopPropagation(); state.competitors = state.competitors.filter(c => c.id !== b.dataset.remove); if (state.activeId === b.dataset.remove) state.activeId = state.competitors[0]?.id; save(); render(); }; });
+      const addBtn = app.querySelector('[data-action="add"]');
+      if (addBtn) addBtn.onclick = () => { const c = createCompetitor(false); state.competitors.push(c); state.activeId = c.id; save(); render(); };
+      const projInput = app.querySelector('[data-action="project"]');
+      if (projInput) projInput.oninput = e => { state.projectName = e.target.value; save(); };
+      app.querySelectorAll('[data-field]').forEach(i => i.oninput = e => { const c = state.competitors.find(x => x.id === i.dataset.id); if (c) { c[i.dataset.field] = e.target.value; save(); render(); } });
+      app.querySelectorAll('[data-cat][data-key]').forEach(i => i.oninput = e => { const c = state.competitors.find(x => x.id === i.dataset.id); if (c) { c[i.dataset.cat][i.dataset.key] = e.target.value; save(); render(); } });
+      app.querySelectorAll('[data-serp]').forEach(cb => cb.onchange = e => { const c = state.competitors.find(x => x.id === cb.dataset.id); if (c) { c.serpFeatures[cb.dataset.serp] = e.target.checked; save(); render(); } });
+      const expBtn = app.querySelector('[data-action="export"]');
+      if (expBtn) expBtn.onclick = () => { const d = JSON.stringify({ projectName: state.projectName, competitors: state.competitors, exportDate: new Date().toISOString() }, null, 2); const b = new Blob([d], { type: 'application/json' }); const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = `${state.projectName || 'complete-iq'}-${new Date().toISOString().split('T')[0]}.json`; a.click(); };
+      const impInput = app.querySelector('[data-action="import"]');
+      if (impInput) impInput.onchange = e => { const f = e.target.files[0]; if (!f) return; const r = new FileReader(); r.onload = ev => { try { const d = JSON.parse(ev.target.result); if (d.competitors) { state.competitors = d.competitors; state.projectName = d.projectName || ''; state.activeId = d.competitors[0]?.id; save(); render(); } } catch { alert('Invalid file'); } }; r.readAsText(f); };
+      const clrBtn = app.querySelector('[data-action="clear"]');
+      if (clrBtn) clrBtn.onclick = () => { if (confirm('Clear all data?')) { localStorage.removeItem('completeIQ'); initDefault(); state.projectName = ''; render(); } };
+    };
+
+    load();
+    render();
+  })();
+  </script>
+</body>
+</html>
